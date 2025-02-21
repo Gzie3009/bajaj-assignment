@@ -1,14 +1,8 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-  Chip,
-  Box,
-} from "@mui/material";
+import { Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
+import CustomChip from "./components/Chip";
 
 function App() {
   const [inputData, setInputData] = useState("");
@@ -27,7 +21,8 @@ function App() {
   };
 
   // Handle filter removal
-  const handleDeleteFilter = (filterToDelete) => () => {
+  const handleDeleteFilter = (filterToDelete) => (e) => {
+    e.stopPropagation(); // Stop event propagation
     setSelectedFilters((filters) =>
       filters.filter((filter) => filter !== filterToDelete)
     );
@@ -51,13 +46,16 @@ function App() {
 
     // Call the backend API
     try {
-      const apiResponse = await fetch("http://localhost:3000/bfhl", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: inputData,
-      });
+      const apiResponse = await fetch(
+        "https://bajaj-backend-bram.onrender.com/bfhl",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: inputData,
+        }
+      );
 
       if (!apiResponse.ok) {
         throw new Error("Failed to fetch data from the API.");
@@ -137,9 +135,6 @@ function App() {
           <div className="mt-6">
             <h3 className="text-lg font-medium text-gray-900">Filters</h3>
             <FormControl fullWidth>
-              <InputLabel id="filters-label" shrink={true}>
-                Select Filters
-              </InputLabel>
               <Select
                 labelId="filters-label"
                 id="filters"
@@ -149,13 +144,10 @@ function App() {
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
-                      <Chip
+                      <CustomChip
                         key={value}
                         label={value}
-                        onDelete={(e) => {
-                          e.stopPropagation(); // ✅ Prevents dropdown from opening
-                          handleDeleteFilter(value)();
-                        }}
+                        onDelete={handleDeleteFilter(value)}
                       />
                     ))}
                   </Box>
