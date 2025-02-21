@@ -1,6 +1,14 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import {
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Chip,
+  Box,
+} from "@mui/material";
 
 function App() {
   const [inputData, setInputData] = useState("");
@@ -14,13 +22,15 @@ function App() {
   };
 
   // Handle filter selection
-  const handleFilterChange = (e) => {
-    const { value, checked } = e.target;
-    if (checked) {
-      setSelectedFilters([...selectedFilters, value]);
-    } else {
-      setSelectedFilters(selectedFilters.filter((filter) => filter !== value));
-    }
+  const handleFilterChange = (event) => {
+    setSelectedFilters(event.target.value);
+  };
+
+  // Handle filter removal
+  const handleDeleteFilter = (filterToDelete) => () => {
+    setSelectedFilters((filters) =>
+      filters.filter((filter) => filter !== filterToDelete)
+    );
   };
 
   // Handle form submission
@@ -92,7 +102,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-white py-8 px-4 sm:px-6 lg:px-8">
-      <ToastContainer /> {/* Add ToastContainer here */}
+      <ToastContainer />
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl font-bold text-center mb-8 text-black">
           22bcs10998
@@ -126,37 +136,31 @@ function App() {
         {response && (
           <div className="mt-6">
             <h3 className="text-lg font-medium text-gray-900">Filters</h3>
-            <div className="mt-2 space-y-2">
-              <label className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  value="numbers"
-                  onChange={handleFilterChange}
-                  className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
-                />
-                <span className="ml-2 text-sm text-gray-700">Numbers</span>
-              </label>
-              <label className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  value="alphabets"
-                  onChange={handleFilterChange}
-                  className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
-                />
-                <span className="ml-2 text-sm text-gray-700">Alphabets</span>
-              </label>
-              <label className="inline-flex items-center">
-                <input
-                  type="checkbox"
-                  value="highest_alphabet"
-                  onChange={handleFilterChange}
-                  className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
-                />
-                <span className="ml-2 text-sm text-gray-700">
-                  Highest Alphabet
-                </span>
-              </label>
-            </div>
+            <FormControl fullWidth>
+              <InputLabel id="filters-label">Select Filters</InputLabel>
+              <Select
+                labelId="filters-label"
+                id="filters"
+                multiple
+                value={selectedFilters}
+                onChange={handleFilterChange}
+                renderValue={(selected) => (
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                    {selected.map((value) => (
+                      <Chip
+                        key={value}
+                        label={value}
+                        onDelete={handleDeleteFilter(value)}
+                      />
+                    ))}
+                  </Box>
+                )}
+              >
+                <MenuItem value="numbers">Numbers</MenuItem>
+                <MenuItem value="alphabets">Alphabets</MenuItem>
+                <MenuItem value="highest_alphabet">Highest Alphabet</MenuItem>
+              </Select>
+            </FormControl>
           </div>
         )}
         {response && renderFilteredResponse()}
