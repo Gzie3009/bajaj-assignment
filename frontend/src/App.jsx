@@ -1,7 +1,14 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Select, MenuItem, FormControl, InputLabel, Box } from "@mui/material";
+import {
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Box,
+  OutlinedInput,
+} from "@mui/material";
 import CustomChip from "./components/Chip";
 
 function App() {
@@ -114,12 +121,11 @@ function App() {
             >
               Enter JSON Data:
             </label>
-            <textarea
+            <input
               id="json-input"
               value={inputData}
               onChange={handleInputChange}
               placeholder='Example: { "data": ["M", "1", "334", "4", "B"] }'
-              rows={5}
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black sm:text-sm"
             />
           </div>
@@ -135,12 +141,14 @@ function App() {
           <div className="mt-6">
             <h3 className="text-lg font-medium text-gray-900">Filters</h3>
             <FormControl fullWidth>
+              <InputLabel id="filters-label">Select filters</InputLabel>
               <Select
                 labelId="filters-label"
                 id="filters"
                 multiple
                 value={selectedFilters}
                 onChange={handleFilterChange}
+                input={<OutlinedInput label="Select filters" />}
                 renderValue={(selected) => (
                   <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                     {selected.map((value) => (
