@@ -50,7 +50,7 @@ app.post("/bfhl", (req, res) => {
       alphabets,
       highest_alphabet,
     };
-    
+
     // Send the response
     res.status(200).json(response);
   } catch (error) {
@@ -69,6 +69,10 @@ app.get("/bfhl", (req, res) => {
   };
 
   res.status(200).json(response);
+});
+
+app.get("/", (req, res) => {
+  res.json({ message: "Backend Running" });
 });
 
 // Start the server

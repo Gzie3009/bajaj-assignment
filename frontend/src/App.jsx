@@ -137,7 +137,9 @@ function App() {
           <div className="mt-6">
             <h3 className="text-lg font-medium text-gray-900">Filters</h3>
             <FormControl fullWidth>
-              <InputLabel id="filters-label">Select Filters</InputLabel>
+              <InputLabel id="filters-label" shrink={true}>
+                Select Filters
+              </InputLabel>
               <Select
                 labelId="filters-label"
                 id="filters"
@@ -150,7 +152,10 @@ function App() {
                       <Chip
                         key={value}
                         label={value}
-                        onDelete={handleDeleteFilter(value)}
+                        onDelete={(e) => {
+                          e.stopPropagation(); // ✅ Prevents dropdown from opening
+                          handleDeleteFilter(value)();
+                        }}
                       />
                     ))}
                   </Box>
